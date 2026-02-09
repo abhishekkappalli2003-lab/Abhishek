@@ -185,13 +185,30 @@
             border-radius: 4px;
         }
 
-        /* Mobile optimization: smaller polaroids and faster transitions */
+        /* Mobile optimization: full-screen simple slideshow */
         @media (max-width: 768px) {
             .polaroid {
-                width: 200px;
-                padding: 10px 10px 40px 10px;
-                transition: all 0.3s ease-out;
-                /* Even faster on mobile */
+                width: 100vw;
+                height: 100vh;
+                max-height: 100vh;
+                padding: 0;
+                background: black;
+                box-shadow: none;
+                transform: none;
+                /* Remove rotation */
+                transition: opacity 0.5s ease;
+                /* Simple fade only */
+                border-radius: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .polaroid img {
+                object-fit: contain;
+                /* Fit entire image on screen */
+                max-width: 100%;
+                max-height: 100%;
             }
         }
 
@@ -797,66 +814,72 @@
             const finalText = document.getElementById("finalText");
             const endText = document.getElementById("endText");
 
-            interval = setInterval(() => {
-                // If images done, loop back to start
-                if (index >= images.length) {
-                    // Restart slideshow from beginning
-                    index = 0;
-                    // Song will keep playing due to loop=true
-                    console.log("Slideshow restarting...");
-                }
+            // If images done, loop back to start
+            if (index >= images.length) {
+                // Restart slideshow from beginning
+                index = 0;
+                // Song will keep playing due to loop=true
+                console.log("Slideshow restarting...");
+            }
 
-                // If we have too many nodes, remove the oldest one to prevent crash
+            // Mobile optimization: show only one image at a time
+            const isMobile = window.innerWidth <= 768;
+
+            if (isMobile) {
+                // Remove ALL previous images on mobile for performance
+                const currentImages = overlay.querySelectorAll('.polaroid');
+                currentImages.forEach(img => img.remove());
+            } else {
+                // Desktop: keep last 25 for stack effect
                 const currentImages = overlay.querySelectorAll('.polaroid');
                 if (currentImages.length > 25) {
                     overlay.removeChild(currentImages[0]);
                 }
+            }
 
-                const polaroidDiv = document.createElement('div');
-                polaroidDiv.className = 'polaroid loading';
+            const polaroidDiv = document.createElement('div');
+            polaroidDiv.className = 'polaroid loading';
 
-                const img = document.createElement('img');
+            const img = document.createElement('img');
 
-                // Mobile optimization: lazy load with error handling
-                img.loading = 'lazy';
-                img.decoding = 'async';
+            // Mobile optimization: lazy load with error handling
+            img.loading = 'lazy';
+            img.decoding = 'async';
 
-                // Error handling for failed image loads
-                img.onerror = function () {
-                    console.warn(`Failed to load: ${images[index]}`);
-                    polaroidDiv.remove();
-                };
+            // Error handling for failed image loads
+            img.onerror = function () {
+                console.warn(`Failed to load: ${images[index]}`);
+                polaroidDiv.remove();
+            };
 
-                // Remove loading indicator when image loads
-                img.onload = function () {
-                    polaroidDiv.classList.remove('loading');
-                };
+            // Remove loading indicator when image loads
+            img.onload = function () {
+                polaroidDiv.classList.remove('loading');
+            };
 
-                img.src = images[index];
-                img.alt = `Memory ${index + 1}`;
+            img.src = images[index];
+            img.alt = `Memory ${index + 1}`;
 
-                // Random rotation between -15 and 15 deg
+            // Desktop only: random rotation
+            if (!isMobile) {
                 const rot = Math.random() * 30 - 15;
                 polaroidDiv.style.setProperty('--rot', rot + 'deg');
+            }
 
-                // Random slight offset for "messy pile" look
-                const xOff = Math.random() * 40 - 20;
-                const yOff = Math.random() * 40 - 20;
+            polaroidDiv.appendChild(img);
+            overlay.appendChild(polaroidDiv);
 
-                polaroidDiv.appendChild(img);
-                overlay.appendChild(polaroidDiv);
+            // Trigger reflow
+            void polaroidDiv.offsetWidth;
 
-                // Trigger reflow
-                void polaroidDiv.offsetWidth;
+            polaroidDiv.classList.add('show');
 
-                polaroidDiv.classList.add('show');
+            // z-index management: new one on top
+            polaroidDiv.style.zIndex = 10 + index;
 
-                // z-index management: new one on top
-                polaroidDiv.style.zIndex = 10 + index;
+            index++;
 
-                index++;
-
-            }, speed);
+        }, speed);
         }
 
         function startChatSequence() {
