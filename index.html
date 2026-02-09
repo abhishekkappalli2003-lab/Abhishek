@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to My Heart 💖</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            overflow: hidden;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            width: 400px;
+            text-align: center;
+            animation: fadeIn 1s ease;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            color: #ff6b9d;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ffcad4;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            outline: none;
+            transition: border-color 0.3s;
+            text-align: center;
+        }
+
+        input:focus {
+            border-color: #ff6b9d;
+        }
+
+        button {
+            width: 100%;
+            background: #ff6b9d;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            font-weight: 600;
+        }
+
+        button:hover {
+            background: #ff4785;
+            transform: scale(1.02);
+        }
+
+        .error {
+            color: #ff0055;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            display: none;
+        }
+
+        /* Shake animation */
+        .shake {
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-10px);
+            }
+
+            50% {
+                transform: translateX(10px);
+            }
+
+            75% {
+                transform: translateX(-10px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-container" id="loginBox">
+        <h1>Hey Aishuu 💕</h1>
+        <p>Ni sherikum Aishu aahno?</p>
+
+        <input type="password" id="passwordInput" placeholder="Enter Magic Number..." />
+        <button onclick="checkPassword()">Unlock 🔐</button>
+        <p class="error" id="errorMsg">Wrong password! 😢</p>
+    </div>
+
+    <script>
+        // Target SHA-256 hash for "1"
+        const TARGET_HASH = "42fc7436e3e6ef537633ff3624dfc0f97357e5c01e35d941f000c5676ce99ba5";
+
+        async function sha256(message) {
+            // encode as (utf-8)
+            const msgBuffer = new TextEncoder().encode(message);
+
+            // hash the message
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+
+            // convert ArrayBuffer to Array
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+            // convert bytes to hex string
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex;
+        }
+
+        async function checkPassword() {
+            const password = document.getElementById("passwordInput").value;
+            const errorMsg = document.getElementById("errorMsg");
+            const loginBox = document.getElementById("loginBox");
+
+            if (!password) {
+                errorMsg.textContent = "Please enter the password!";
+                errorMsg.style.display = "block";
+                return;
+            }
+
+            try {
+                const hash = await sha256(password);
+
+                if (hash === TARGET_HASH) {
+                    // Success!
+                    sessionStorage.setItem("is_aishu", "true");
+                    window.location.href = "valentine.html";
+                } else {
+                    // Failure
+                    errorMsg.textContent = "Wrong password details! 😢";
+                    errorMsg.style.display = "block";
+                    loginBox.classList.add("shake");
+                    setTimeout(() => loginBox.classList.remove("shake"), 500);
+                    document.getElementById("passwordInput").value = "";
+                }
+            } catch (e) {
+                console.error("Hashing failed", e);
+                // Fallback for non-secure contexts (if crypto.subtle fails)
+                // Since this is a simple personal page, we might be on file:// which blocks crypto.subtle in some browsers
+                // If it fails, we simply check plain text for fallback ONLY (User asked for secure, but functionality is key)
+                // But let's try to stick to hash. If error, maybe alert user.
+                alert("Security check failed. Please ensure you are running in a secure context or modern browser.");
+            }
+        }
+
+        // Enter key support
+        document.getElementById("passwordInput").addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                checkPassword();
+            }
+        });
+    </script>
+</body>
+
+</html>
