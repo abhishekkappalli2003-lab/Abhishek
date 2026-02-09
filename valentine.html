@@ -431,7 +431,8 @@
         // Make song loop continuously
         loveSong.loop = true;
 
-        noBtn.onmouseenter = () => {
+        // Function to move No button away
+        function moveNoButton() {
             const container = document.querySelector(".button-container");
             const containerRect = container.getBoundingClientRect();
             const yesRect = yesBtn.getBoundingClientRect();
@@ -444,15 +445,6 @@
             while (overlap && attempts < 50) {
                 newLeft = Math.random() * (containerRect.width - noRect.width);
                 newTop = Math.random() * (containerRect.height - noRect.height);
-
-                // Check if the new position overlaps with the Yes button
-                // Since noBtn is absolute in container, we need to convert Yes button's rect to be relative to container
-                // Actually, easiest is to assume container is top-left 0,0 for calculation relative to it.
-
-                // Let's rely on offsets relative to the viewport for collision detection logic to be simpler
-                // We propose a candidate (x,y) for NoBtn relative to Container.
-                // Its viewport x would be containerRect.left + x
-                // Its viewport y would be containerRect.top + y
 
                 const proposedNoGlobalLeft = containerRect.left + newLeft;
                 const proposedNoGlobalTop = containerRect.top + newTop;
@@ -472,20 +464,44 @@
                     proposedNoGlobalTop > yesBottom
                 ) {
                     overlap = false;
+                } else {
+                    attempts++;
                 }
-                attempts++;
             }
 
-            noBtn.style.right = "auto";
+            noBtn.style.right = "auto"; // Ensure 'right' property doesn't interfere
             noBtn.style.left = newLeft + "px";
             noBtn.style.top = newTop + "px";
-        };
+        }
 
-        yesBtn.onclick = () => {
+        // Desktop: mouse events
+        noBtn.onmouseenter = moveNoButton;
+
+        // Mobile: touch events
+        noBtn.addEventListener('touchstart', function (e) {
+            e.preventDefault(); // Prevent default touch behavior
+            moveNoButton();
+        });
+
+        // Also add click event for No button (in case touch doesn't work)
+        noBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            moveNoButton();
+        });
+
+        // Function to handle Yes button click/touch
+        function handleYesButtonClick() {
             document.getElementById("question").style.display = "none";
             document.getElementById("success").style.display = "block";
             document.body.classList.add("success-mode");
-        };
+        }
+
+        // Yes button - works on both desktop and mobile
+        yesBtn.addEventListener('click', handleYesButtonClick);
+        yesBtn.addEventListener('touchstart', function (e) {
+            e.preventDefault();
+            handleYesButtonClick();
+        });
 
         /* ⚡ SLIDESHOW LOGIC */
         const images = [
