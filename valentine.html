@@ -430,6 +430,25 @@
 
         // Make song loop continuously
         loveSong.loop = true;
+        heartbeat.loop = true;
+
+        // Audio Unlock Mechanism for mobile/modern browsers
+        let audioUnlocked = false;
+        function unlockAudio() {
+            if (audioUnlocked) return;
+
+            // Try playing a silent moment/starting sounds
+            heartbeat.play().then(() => {
+                audioUnlocked = true;
+                console.log("Audio Unlocked & Heartbeat Started");
+                // Remove the unlock listeners once successful
+                document.removeEventListener('click', unlockAudio);
+                document.removeEventListener('touchstart', unlockAudio);
+            }).catch(e => console.warn("Waiting for interaction to unlock audio...", e));
+        }
+
+        document.addEventListener('click', unlockAudio);
+        document.addEventListener('touchstart', unlockAudio);
 
         // Function to move No button away
         function moveNoButton() {
@@ -622,29 +641,30 @@
             existingImages.forEach(img => img.remove());
 
             // Play music and sync
-            loveSong.currentTime = 0; // Restart song from beginning
-            loveSong.play().then(() => {
-                const duration = loveSong.duration; // in seconds
-                if (!duration) {
-                    runSlideshow(1500); // Increased default from 800ms to 1.5s for mobile
-                    return;
-                }
+            loveSong.currentTime = 0;
+            const playPromise = loveSong.play();
 
-                // Calculate interval to fit all images
-                const availableTime = (duration - 2) * 1000;
-                let intervalTime = availableTime / images.length;
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    const duration = loveSong.duration;
+                    if (!duration) {
+                        runSlideshow(5000);
+                        return;
+                    }
 
-                // Minimum: 5 seconds per image for comfortable viewing
-                if (intervalTime < 5000) intervalTime = 5000;
+                    const availableTime = (duration - 2) * 1000;
+                    let intervalTime = availableTime / images.length;
+                    if (intervalTime < 5000) intervalTime = 5000;
 
-                console.log(`Song duration: ${duration}s, Images: ${images.length}, Interval: ${intervalTime}ms`);
-
-                runSlideshow(intervalTime);
-
-            }).catch(err => {
-                console.error("Audio play failed", err);
-                runSlideshow(5000); // 5 seconds fallback
-            });
+                    console.log(`Song duration: ${duration}s, Interval: ${intervalTime}ms`);
+                    runSlideshow(intervalTime);
+                }).catch(err => {
+                    console.error("Audio play failed, falling back", err);
+                    runSlideshow(5000);
+                });
+            } else {
+                runSlideshow(5000);
+            }
         }
         const chatMessages = [
             "Happ Valentines Dayy <3...........!!!!!"
