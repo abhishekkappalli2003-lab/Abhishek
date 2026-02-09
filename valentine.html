@@ -179,16 +179,19 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             transform: scale(1.5) rotate(0deg);
             opacity: 0;
-            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: all 0.4s ease-out;
+            /* Reduced from 0.6s for smoother mobile */
             object-fit: cover;
             border-radius: 4px;
         }
 
-        /* Mobile optimization: smaller polaroids */
+        /* Mobile optimization: smaller polaroids and faster transitions */
         @media (max-width: 768px) {
             .polaroid {
                 width: 200px;
                 padding: 10px 10px 40px 10px;
+                transition: all 0.3s ease-out;
+                /* Even faster on mobile */
             }
         }
 
@@ -292,7 +295,8 @@
             line-height: 1.4;
             opacity: 0;
             transform: translateX(-30px);
-            transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: all 0.3s ease-out;
+            /* Reduced from 0.5s for mobile */
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             /* Font styling */
             font-family: 'Poppins', sans-serif;
@@ -317,8 +321,18 @@
             opacity: 0;
             z-index: 10002;
             pointer-events: none;
-            transition: opacity 2s ease;
+            transition: opacity 1.5s ease;
+            /* Reduced from 2s */
             animation: heartbeatText 3s infinite ease-in-out;
+        }
+
+        /* Reduce animation on mobile for performance */
+        @media (max-width: 768px) {
+            #valentinesText {
+                font-size: 2.5rem;
+                animation: heartbeatText 4s infinite ease-in-out;
+                /* Slower on mobile */
+            }
         }
 
         #valentinesText.show {
