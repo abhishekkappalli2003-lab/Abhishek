@@ -250,7 +250,6 @@
                 transform: translate(-50%, -50%) rotate(360deg);
             }
         }
-        }
 
         /* final text */
         .final-overlay-text {
@@ -390,8 +389,10 @@
             <h1>Hey Aishuubiiiiiiiiiii 💕</h1>
             <p>Will you be my Valentine?</p>
             <div class="button-container">
-                <button id="yesBtn" onclick="handleYesButtonClick(event)">Yes 💖</button>
-                <button id="noBtn" onmouseenter="moveNoButton()" onclick="moveNoButton()">No</button>
+                <button id="yesBtn" onclick="handleYesButtonClick(event)" ontouchstart="handleYesButtonClick(event)">Yes
+                    💖</button>
+                <button id="noBtn" onmouseenter="moveNoButton()" onclick="moveNoButton()"
+                    ontouchstart="moveNoButton()">No</button>
             </div>
         </div>
 
@@ -622,7 +623,7 @@
         const endText = document.getElementById("endText");
 
         function startFastShow(e) {
-            e.stopPropagation();
+            if (e && e.stopPropagation) e.stopPropagation();
 
             // Stop the heartbeat audio!
             heartbeat.pause();
