@@ -411,6 +411,9 @@
         const heartbeat = document.getElementById("heartbeat");
         const loveSong = document.getElementById("loveSong");
 
+        // Make song loop continuously
+        loveSong.loop = true;
+
         noBtn.onmouseenter = () => {
             const container = document.querySelector(".button-container");
             const containerRect = container.getBoundingClientRect();
@@ -755,10 +758,11 @@
             existingImages.forEach(img => img.remove());
 
             // Play music and sync
+            loveSong.currentTime = 0; // Restart song from beginning
             loveSong.play().then(() => {
                 const duration = loveSong.duration; // in seconds
                 if (!duration) {
-                    runSlideshow(800);
+                    runSlideshow(1500); // Increased default from 800ms to 1.5s for mobile
                     return;
                 }
 
@@ -768,8 +772,9 @@
                 const availableTime = (duration - 2) * 1000;
                 let intervalTime = availableTime / images.length;
 
-                // Cap speed: ensure it's not crazy fast
-                if (intervalTime < 40) intervalTime = 40;
+                // Mobile-friendly minimum: 1 second per image (increased from 40ms)
+                // This gives images time to load on slower connections
+                if (intervalTime < 1000) intervalTime = 1000;
 
                 console.log(`Song duration: ${duration}s, Images: ${images.length}, Interval: ${intervalTime}ms`);
 
@@ -777,7 +782,7 @@
 
             }).catch(err => {
                 console.error("Audio play failed", err);
-                runSlideshow(500);
+                runSlideshow(1500); // Increased fallback from 500ms to 1.5s
             });
         }
 
@@ -793,20 +798,12 @@
             const endText = document.getElementById("endText");
 
             interval = setInterval(() => {
-                // If song ended or images done
-                if (index >= images.length || loveSong.ended) {
-                    clearInterval(interval);
-                    loveSong.pause();
-
-                    // Show final static texts
-                    document.getElementById("valentinesText").classList.remove("show"); // Fade out title if desired, or keep it. Let's fade out to focus on "Always you"
-                    setTimeout(() => finalText.classList.add("show"), 500);
-                    setTimeout(() => endText.style.display = "block", 2000);
-
-                    // START CHAT SEQUENCE
-                    setTimeout(() => startChatSequence(), 1500);
-
-                    return;
+                // If images done, loop back to start
+                if (index >= images.length) {
+                    // Restart slideshow from beginning
+                    index = 0;
+                    // Song will keep playing due to loop=true
+                    console.log("Slideshow restarting...");
                 }
 
                 // If we have too many nodes, remove the oldest one to prevent crash
