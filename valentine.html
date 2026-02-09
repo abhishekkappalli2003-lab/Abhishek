@@ -814,72 +814,81 @@
             const finalText = document.getElementById("finalText");
             const endText = document.getElementById("endText");
 
-            // If images done, loop back to start
-            if (index >= images.length) {
-                // Restart slideshow from beginning
-                index = 0;
-                // Song will keep playing due to loop=true
-                console.log("Slideshow restarting...");
-            }
-
-            // Mobile optimization: show only one image at a time
-            const isMobile = window.innerWidth <= 768;
-
-            if (isMobile) {
-                // Remove ALL previous images on mobile for performance
-                const currentImages = overlay.querySelectorAll('.polaroid');
-                currentImages.forEach(img => img.remove());
-            } else {
-                // Desktop: keep last 25 for stack effect
-                const currentImages = overlay.querySelectorAll('.polaroid');
-                if (currentImages.length > 25) {
-                    overlay.removeChild(currentImages[0]);
+            interval = setInterval(() => {
+                // If images done, loop back to start
+                if (index >= images.length) {
+                    // Restart slideshow from beginning
+                    index = 0;
+                    // Song will keep playing due to loop=true
+                    console.log("Slideshow restarting...");
                 }
-            }
 
-            const polaroidDiv = document.createElement('div');
-            polaroidDiv.className = 'polaroid loading';
+                // Mobile optimization: show only one image at a time
+                const isMobile = window.innerWidth <= 768;
 
-            const img = document.createElement('img');
+                if (isMobile) {
+                    // Remove ALL previous images on mobile for performance
+                    const currentImages = overlay.querySelectorAll('.polaroid');
+                    currentImages.forEach(img => img.remove());
+                } else {
+                    // Desktop: keep last 25 for stack effect
+                    const currentImages = overlay.querySelectorAll('.polaroid');
+                    if (currentImages.length > 25) {
+                        overlay.removeChild(currentImages[0]);
+                    }
+                }
 
-            // Mobile optimization: lazy load with error handling
-            img.loading = 'lazy';
-            img.decoding = 'async';
+                const polaroidDiv = document.createElement('div');
+                polaroidDiv.className = 'polaroid loading';
 
-            // Error handling for failed image loads
-            img.onerror = function () {
-                console.warn(`Failed to load: ${images[index]}`);
-                polaroidDiv.remove();
-            };
+                const img = document.createElement('img');
 
-            // Remove loading indicator when image loads
-            img.onload = function () {
-                polaroidDiv.classList.remove('loading');
-            };
+                // Mobile optimization: lazy load with error handling
+                img.loading = 'lazy';
+                img.decoding = 'async';
 
-            img.src = images[index];
-            img.alt = `Memory ${index + 1}`;
+                // Error handling for failed image loads
+                img.onerror = function () {
+                    console.warn(`Failed to load: ${images[index]}`);
+                    polaroidDiv.remove();
+                };
 
-            // Desktop only: random rotation
-            if (!isMobile) {
-                const rot = Math.random() * 30 - 15;
-                polaroidDiv.style.setProperty('--rot', rot + 'deg');
-            }
+                // Remove loading indicator when image loads
+                img.onload = function () {
+                    polaroidDiv.classList.remove('loading');
+                };
 
-            polaroidDiv.appendChild(img);
-            overlay.appendChild(polaroidDiv);
+                img.src = images[index];
+                img.alt = `Memory ${index + 1}`;
 
-            // Trigger reflow
-            void polaroidDiv.offsetWidth;
+                // Mobile: random scattered positioning
+                if (isMobile) {
+                    // Random position across the screen
+                    const randomTop = Math.random() * 60 + 10; // 10% to 70% from top
+                    const randomLeft = Math.random() * 60 + 10; // 10% to 70% from left
+                    polaroidDiv.style.top = randomTop + '%';
+                    polaroidDiv.style.left = randomLeft + '%';
+                    polaroidDiv.style.transform = 'translate(-50%, -50%)'; // Center the image at that position
+                } else {
+                    // Desktop: random rotation
+                    const rot = Math.random() * 30 - 15;
+                    polaroidDiv.style.setProperty('--rot', rot + 'deg');
+                }
 
-            polaroidDiv.classList.add('show');
+                polaroidDiv.appendChild(img);
+                overlay.appendChild(polaroidDiv);
 
-            // z-index management: new one on top
-            polaroidDiv.style.zIndex = 10 + index;
+                // Trigger reflow
+                void polaroidDiv.offsetWidth;
 
-            index++;
+                polaroidDiv.classList.add('show');
 
-        }, speed);
+                // z-index management: new one on top
+                polaroidDiv.style.zIndex = 10 + index;
+
+                index++;
+
+            }, speed);
         }
 
         function startChatSequence() {
