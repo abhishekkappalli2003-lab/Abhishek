@@ -4,128 +4,367 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login to My Heart 💖</title>
+    <title>Aishuu 💕</title>
+
     <link
         href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap"
         rel="stylesheet">
+
     <style>
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            box-sizing: border-box
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             min-height: 100vh;
-            display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            background: url('Aishu.png') repeat;
+            background-size: 150px;
             overflow: hidden;
+            display: none;
+            /* Hidden by default until authorized */
         }
 
-        .login-container {
-            background: rgba(255, 255, 255, 0.9);
+        /* overlay before yes */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 200, 220, .35);
+            z-index: -1;
+        }
+
+        /* success background */
+        body.success-mode {
+            background: url('IMG-20250512-WA0101.jpg') no-repeat center/cover;
+        }
+
+        body.success-mode::before {
+            display: none
+        }
+
+        /* main card */
+        .container {
+            background: rgba(255, 255, 255, .6);
             padding: 40px;
             border-radius: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            max-width: 90%;
-            width: 400px;
+            max-width: 520px;
+            width: 90%;
             text-align: center;
-            animation: fadeIn 1s ease;
         }
 
+        /* text */
         h1 {
             font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
             color: #ff6b9d;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
         }
 
         p {
-            color: #666;
-            margin-bottom: 25px;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
+            margin: 15px 0
         }
 
-        input {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #ffcad4;
-            border-radius: 10px;
-            font-size: 1rem;
-            margin-bottom: 20px;
-            outline: none;
-            transition: border-color 0.3s;
-            text-align: center;
-        }
-
-        input:focus {
-            border-color: #ff6b9d;
+        /* buttons */
+        .button-container {
+            position: relative;
+            height: 130px
         }
 
         button {
-            width: 100%;
-            background: #ff6b9d;
-            color: white;
-            padding: 15px;
+            padding: 15px 40px;
+            border-radius: 50px;
             border: none;
-            border-radius: 10px;
             font-size: 1.1rem;
             cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
             font-weight: 600;
         }
 
-        button:hover {
-            background: #ff4785;
-            transform: scale(1.02);
+        #yesBtn {
+            background: #f5576c;
+            color: white
         }
 
-        .error {
-            color: #ff0055;
-            font-size: 0.9rem;
-            margin-top: 15px;
+        #noBtn {
+            background: #eee;
+            position: absolute;
+            right: 0;
+            transition: all 0.4s ease
+        }
+
+        /* success */
+        .success {
+            display: none
+        }
+
+        /* surprise link */
+        .surprise-link {
+            margin-top: 20px;
+            font-weight: 600;
+            color: #ff4f8b;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        /* ⚡ POLAROID SLIDESHOW */
+        .fast-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
             display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            overflow: hidden;
         }
 
-        /* Shake animation */
-        .shake {
-            animation: shake 0.5s;
+        /* Romantic background animation for the overlay */
+        .fast-overlay.romantic-mode {
+            background: linear-gradient(45deg, #1a0b12, #2d0f18, #1a0b12);
+            background-size: 400% 400%;
+            animation: romanticGradient 10s ease infinite;
         }
 
-        @keyframes shake {
+        @keyframes romanticGradient {
             0% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-10px);
+                background-position: 0% 50%;
+                box-shadow: inset 0 0 50px #ff4d88;
             }
 
             50% {
-                transform: translateX(10px);
-            }
-
-            75% {
-                transform: translateX(-10px);
+                background-position: 100% 50%;
+                box-shadow: inset 0 0 100px #ff0055;
             }
 
             100% {
-                transform: translateX(0);
+                background-position: 0% 50%;
+                box-shadow: inset 0 0 50px #ff4d88;
             }
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
+        /* Floating hearts background effect */
+        .fast-overlay.romantic-mode::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff6b9d' opacity='0.2'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
+            background-size: 50px 50px;
+            animation: floatingHearts 20s linear infinite;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        @keyframes floatingHearts {
+            0% {
+                background-position: 0 0;
             }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            100% {
+                background-position: 100px 100px;
+            }
+        }
+
+        .polaroid {
+            position: absolute;
+            width: 300px;
+            height: auto;
+            max-height: 80vh;
+            background: white;
+            padding: 15px 15px 60px 15px;
+            /* bottom padding for polaroid look */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transform: scale(1.5) rotate(0deg);
+            opacity: 0;
+            transition: all 0.4s ease-out;
+            /* Reduced from 0.6s for smoother mobile */
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        /* Mobile optimization: full-screen simple slideshow */
+        @media (max-width: 768px) {
+            .polaroid {
+                width: 100vw;
+                height: 100vh;
+                max-height: 100vh;
+                padding: 0;
+                background: black;
+                box-shadow: none;
+                transform: none;
+                /* Remove rotation */
+                transition: opacity 0.5s ease;
+                /* Simple fade only */
+                border-radius: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .polaroid img {
+                object-fit: contain;
+                /* Fit entire image on screen */
+                max-width: 100%;
+                max-height: 100%;
+            }
+        }
+
+        .polaroid.show {
+            opacity: 1;
+            transform: scale(1) rotate(var(--rot));
+        }
+
+        /* Specific styling to ensure images look nice */
+        .polaroid img {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: #f0f0f0;
+            /* Placeholder while loading */
+        }
+
+        /* Loading indicator for images */
+        .polaroid.loading::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #ff6b9d;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        /* final text */
+        .final-overlay-text {
+            position: absolute;
+            bottom: 22%;
+            width: 100%;
+            text-align: center;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: white;
+            opacity: 0;
+            transition: opacity 1.2s ease, transform 1.2s ease;
+            transform: translateY(10px);
+        }
+
+        .final-overlay-text.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* heart */
+        .end-text {
+            position: absolute;
+            bottom: 12%;
+            font-size: 3rem;
+            color: white;
+            display: none;
+        }
+
+        /* 💬 CHAT MESSAGES */
+        .chat-container {
+            position: fixed;
+            bottom: 50px;
+            left: 20px;
+            width: 320px;
+            max-width: 80%;
+            height: auto;
+            max-height: 70vh;
+            display: none;
+            /* Flex when active */
+            flex-direction: column;
+            justify-content: flex-end;
+            /* Stack from bottom */
+            z-index: 10001;
+            overflow: hidden;
+            pointer-events: none;
+            /* Let clicks pass through if needed */
+        }
+
+        .chat-bubble {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            padding: 12px 18px;
+            border-radius: 18px 18px 18px 4px;
+            /* Tail bottom-left */
+            margin-top: 10px;
+            font-size: 0.95rem;
+            color: #333;
+            line-height: 1.4;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.3s ease-out;
+            /* Reduced from 0.5s for mobile */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            /* Font styling */
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+        }
+
+        .chat-bubble.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Valentine Text */
+        #valentinesText {
+            position: absolute;
+            top: 15%;
+            width: 100%;
+            text-align: center;
+            font-family: 'Dancing Script', cursive;
+            font-size: 4rem;
+            color: #ff6b9d;
+            text-shadow: 0 0 20px rgba(255, 107, 157, 0.8);
+            opacity: 0;
+            z-index: 10002;
+            pointer-events: none;
+            transition: opacity 1.5s ease;
+            /* Reduced from 2s */
+            animation: heartbeatText 3s infinite ease-in-out;
+        }
+
+        /* Reduce animation on mobile for performance */
+        @media (max-width: 768px) {
+            #valentinesText {
+                font-size: 2.5rem;
+                animation: heartbeatText 4s infinite ease-in-out;
+                /* Slower on mobile */
+            }
+        }
+
+        #valentinesText.show {
+            opacity: 1;
+        }
+
+        @keyframes heartbeatText {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+                text-shadow: 0 0 30px rgba(255, 79, 139, 1);
             }
         }
     </style>
@@ -133,77 +372,420 @@
 
 <body>
 
-    <div class="login-container" id="loginBox">
-        <h1>Hey Aishuubiiiiiiiiiii 💕</h1>
-        <p>Ni sherikum Aishu aahno?</p>
-
-        <input type="password" id="passwordInput" placeholder="Enter Magic Number..." />
-        <button onclick="checkPassword()">Unlock 🔐</button>
-        <p class="error" id="errorMsg">Wrong password! 😢</p>
-    </div>
+    <div id="authCheck" style="display:none;"></div>
 
     <script>
-        // Target SHA-256 hash for "1"
-        const TARGET_HASH = "42fc7436e3e6ef537633ff3624dfc0f97357e5c01e35d941f000c5676ce99ba5";
-
-        async function sha256(message) {
-            // encode as (utf-8)
-            const msgBuffer = new TextEncoder().encode(message);
-
-            // hash the message
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-
-            // convert ArrayBuffer to Array
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-
-            // convert bytes to hex string
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            return hashHex;
+        // Check authorization immediately
+        if (sessionStorage.getItem("is_aishu") !== "true") {
+            window.location.href = "index.html";
+        } else {
+            document.body.style.display = "flex"; // Show body content
         }
-
-        async function checkPassword() {
-            const password = document.getElementById("passwordInput").value;
-            const errorMsg = document.getElementById("errorMsg");
-            const loginBox = document.getElementById("loginBox");
-
-            if (!password) {
-                errorMsg.textContent = "Please enter the password!";
-                errorMsg.style.display = "block";
-                return;
-            }
-
-            try {
-                const hash = await sha256(password);
-
-                if (hash === TARGET_HASH) {
-                    // Success!
-                    sessionStorage.setItem("is_aishu", "true");
-                    window.location.href = "valentine.html";
-                } else {
-                    // Failure
-                    errorMsg.textContent = "Wrong password details! 😢";
-                    errorMsg.style.display = "block";
-                    loginBox.classList.add("shake");
-                    setTimeout(() => loginBox.classList.remove("shake"), 500);
-                    document.getElementById("passwordInput").value = "";
-                }
-            } catch (e) {
-                console.error("Hashing failed", e);
-                // Fallback for non-secure contexts (if crypto.subtle fails)
-                // Since this is a simple personal page, we might be on file:// which blocks crypto.subtle in some browsers
-                // If it fails, we simply check plain text for fallback ONLY (User asked for secure, but functionality is key)
-                // But let's try to stick to hash. If error, maybe alert user.
-                alert("Security check failed. Please ensure you are running in a secure context or modern browser.");
-            }
-        }
-
-        // Enter key support
-        document.getElementById("passwordInput").addEventListener("keypress", function (event) {
-            if (event.key === "Enter") {
-                checkPassword();
-            }
-        });
     </script>
+
+    <div class="container">
+
+        <div id="question">
+            <h1>Hey Aishuubiiiiiiiiiii 💕</h1>
+            <p>Will you be my Valentine?</p>
+            <div class="button-container">
+                <button id="yesBtn" onclick="handleYesButtonClick(event)" ontouchstart="handleYesButtonClick(event)">Yes
+                    💖</button>
+                <button id="noBtn" onmouseenter="moveNoButton()" onclick="moveNoButton()"
+                    ontouchstart="moveNoButton()">No</button>
+            </div>
+        </div>
+
+        <div class="success" id="success">
+            <h1>I knew it 😍</h1>
+            <p>Entheda… ni surprise aaayo ith kanditt 😌✨</p>
+
+            <p class="surprise-link" onclick="startFastShow(event)">
+                ithil nekku veendum surprise kanam 💕
+            </p>
+        </div>
+
+    </div>
+
+    <!-- ⚡ FAST SLIDESHOW OVERLAY -->
+    <div class="fast-overlay" id="fastOverlay" onclick="closeFastShow()">
+        <div id="valentinesText">Happy Valentine's Day! HehheHeeeee <br><span style="font-size: 0.6em; color: white;">
+                💖</span></div>
+        <!-- Images will be injected here -->
+        <div class="final-overlay-text" id="finalText">Always you.</div>
+        <div class="end-text" id="endText">❤️</div>
+
+        <!-- Chat Container -->
+        <div class="chat-container" id="chatContainer"></div>
+    </div>
+
+    <!-- sounds -->
+    <audio id="heartbeat" src="https://assets.mixkit.co/active_storage/sfx/212/212-preview.mp3"></audio>
+    <audio id="loveSong" src="song.mp3" preload="auto"></audio>
+
+    <script>
+        const noBtn = document.getElementById("noBtn");
+        const yesBtn = document.getElementById("yesBtn");
+        const heartbeat = document.getElementById("heartbeat");
+        const loveSong = document.getElementById("loveSong");
+
+        // Make song loop continuously
+        loveSong.loop = true;
+        heartbeat.loop = true;
+
+        // Audio Unlock Mechanism for mobile/modern browsers
+        let audioUnlocked = false;
+        function unlockAudio() {
+            if (audioUnlocked) return;
+
+            // Try playing a silent moment/starting sounds
+            heartbeat.play().then(() => {
+                audioUnlocked = true;
+                console.log("Audio Unlocked & Heartbeat Started");
+                // Remove the unlock listeners once successful
+                document.removeEventListener('click', unlockAudio);
+                document.removeEventListener('touchstart', unlockAudio);
+            }).catch(e => console.warn("Waiting for interaction to unlock audio...", e));
+        }
+
+        document.addEventListener('click', unlockAudio);
+        document.addEventListener('touchstart', unlockAudio);
+
+        // Function to move No button away
+        function moveNoButton() {
+            const container = document.querySelector(".button-container");
+            const containerRect = container.getBoundingClientRect();
+            const yesRect = yesBtn.getBoundingClientRect();
+            const noRect = noBtn.getBoundingClientRect();
+
+            let newLeft, newTop;
+            let overlap = true;
+            let attempts = 0;
+
+            while (overlap && attempts < 50) {
+                newLeft = Math.random() * (containerRect.width - noRect.width);
+                newTop = Math.random() * (containerRect.height - noRect.height);
+
+                const proposedNoGlobalLeft = containerRect.left + newLeft;
+                const proposedNoGlobalTop = containerRect.top + newTop;
+                const proposedNoGlobalRight = proposedNoGlobalLeft + noRect.width;
+                const proposedNoGlobalBottom = proposedNoGlobalTop + noRect.height;
+
+                const yesLeft = yesRect.left;
+                const yesRight = yesRect.right;
+                const yesTop = yesRect.top;
+                const yesBottom = yesRect.bottom;
+
+                // Collision check
+                if (
+                    proposedNoGlobalRight < yesLeft ||
+                    proposedNoGlobalLeft > yesRight ||
+                    proposedNoGlobalBottom < yesTop ||
+                    proposedNoGlobalTop > yesBottom
+                ) {
+                    overlap = false;
+                } else {
+                    attempts++;
+                }
+            }
+
+            noBtn.style.right = "auto"; // Ensure 'right' property doesn't interfere
+            noBtn.style.left = newLeft + "px";
+            noBtn.style.top = newTop + "px";
+        }
+        // Function to handle Yes button click/touch
+        function handleYesButtonClick(e) {
+            if (e) e.stopPropagation();
+            document.getElementById("question").style.display = "none";
+            document.getElementById("success").style.display = "block";
+            document.body.classList.add("success-mode");
+
+            // Trigger slideshow
+            startFastShow(e || window.event);
+        }
+
+        /* ⚡ SLIDESHOW LOGIC */
+        const images = [
+            "mem_001.jpg",
+            "mem_002.jpg",
+            "mem_003.jpg",
+            "mem_004.jpg",
+            "mem_020.jpg",
+            "mem_021.jpg",
+            "mem_022.jpg",
+            "mem_023.jpg",
+            "mem_024.jpg",
+            "mem_025.jpg",
+            "mem_026.jpg",
+            "mem_027.jpg",
+            "mem_028.jpg",
+            "mem_029.jpg",
+            "mem_030.jpg",
+            "mem_031.jpg",
+            "mem_032.jpg",
+            "mem_033.jpg",
+            "mem_034.jpg",
+            "mem_035.jpg",
+            "mem_036.jpg",
+            "mem_037.jpg",
+            "mem_038.jpg",
+            "mem_039.jpg",
+            "mem_040.jpg",
+            "mem_041.jpg",
+            "mem_042.jpg",
+            "mem_043.jpg",
+            "mem_044.jpg",
+            "mem_045.jpg",
+            "mem_046.jpg",
+            "mem_047.jpg",
+            "mem_048.jpg",
+            "mem_049.jpg",
+            "mem_050.jpg",
+            "mem_051.jpg",
+            "mem_052.jpg",
+            "mem_053.jpg",
+            "mem_054.jpg",
+            "mem_055.jpg",
+            "mem_056.jpg",
+            "mem_057.jpg",
+            "mem_058.jpg",
+            "mem_059.jpg",
+            "mem_060.jpg",
+            "mem_061.jpg",
+            "mem_062.jpg",
+            "mem_063.jpg",
+            "mem_064.jpg",
+            "mem_065.jpg",
+            "mem_066.jpg",
+            "mem_067.jpg",
+            "mem_068.jpg",
+            "mem_069.jpg",
+            "mem_070.jpg",
+            "mem_071.jpg",
+            "mem_072.jpg",
+            "mem_073.jpg",
+            "mem_074.jpg",
+            "mem_075.jpg",
+            "mem_076.jpg",
+            "mem_077.jpg",
+            "mem_078.jpg",
+            "mem_079.jpg",
+            "mem_080.jpg",
+            "mem_081.jpg",
+            "mem_082.jpg",
+            "mem_083.jpg",
+            "mem_084.jpg",
+            "mem_085.jpg",
+            "mem_086.jpg",
+            "mem_087.jpg",
+            "mem_088.jpg",
+            "mem_089.jpg",
+            "mem_090.jpg",
+            "mem_091.jpg",
+            "mem_092.jpg",
+            "mem_093.jpg",
+            "mem_094.jpg",
+            "mem_095.jpg",
+            "mem_096.jpg",
+            "mem_097.jpg",
+            "mem_098.jpg",
+            "mem_099.jpg",
+            "mem_100.jpg",
+            "mem_101.jpg",
+            "mem_102.jpg",
+            "mem_103.jpg",
+            "mem_104.jpg",
+            "mem_105.jpg",
+            "mem_106.jpg",
+            "mem_107.jpg",
+            "mem_108.jpg",
+            "mem_109.jpg",
+            "mem_110.jpg",
+            "mem_111.jpg",
+            "mem_112.jpg",
+            "mem_113.jpg",
+            "mem_114.jpg",
+            "mem_115.jpg",
+            "mem_116.png",
+            "mem_117.jpg",
+            "mem_118.jpg",
+            "mem_119.jpg",
+            "mem_120.jpg",
+            "mem_121.jpg",
+            "mem_122.jpg",
+            "mem_128.jpg",
+            "mem_129.jpg"
+        ];
+
+        let index = 0, interval;
+        const overlay = document.getElementById("fastOverlay");
+        const finalText = document.getElementById("finalText");
+        const endText = document.getElementById("endText");
+
+        function startFastShow(e) {
+            if (e && e.stopPropagation) e.stopPropagation();
+
+            // Stop the heartbeat audio!
+            heartbeat.pause();
+            heartbeat.currentTime = 0;
+
+            const loveSong = document.getElementById("loveSong");
+            overlay.style.display = "flex";
+            overlay.classList.add("romantic-mode"); // Enable romantic bg
+            index = 0;
+            finalText.classList.remove("show");
+            document.getElementById("valentinesText").classList.add("show"); // Show Happy Valentine's Day
+            endText.style.display = "none";
+
+            // Clear previous images but keep text
+            const existingImages = overlay.querySelectorAll('.polaroid');
+            existingImages.forEach(img => img.remove());
+
+            // Play music and sync
+            loveSong.currentTime = 0;
+            const playPromise = loveSong.play();
+
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    const duration = loveSong.duration;
+                    if (!duration) {
+                        runSlideshow(5000);
+                        return;
+                    }
+
+                    const availableTime = (duration - 2) * 1000;
+                    let intervalTime = availableTime / images.length;
+                    if (intervalTime < 5000) intervalTime = 5000;
+
+                    console.log(`Song duration: ${duration}s, Interval: ${intervalTime}ms`);
+                    runSlideshow(intervalTime);
+                }).catch(err => {
+                    console.error("Audio play failed, falling back", err);
+                    runSlideshow(5000);
+                });
+            } else {
+                runSlideshow(5000);
+            }
+        }
+        const chatMessages = [
+            "Happ Valentines Dayy <3...........!!!!!"
+        ];
+
+        function runSlideshow(speed) {
+            const loveSong = document.getElementById("loveSong");
+            const overlay = document.getElementById("fastOverlay");
+            const finalText = document.getElementById("finalText");
+            const endText = document.getElementById("endText");
+
+            interval = setInterval(() => {
+                // If images done, loop back to start
+                if (index >= images.length) {
+                    // Restart slideshow from beginning
+                    index = 0;
+                    // Song will keep playing due to loop=true
+                    console.log("Slideshow restarting...");
+                }
+
+                // Mobile optimization: show only one image at a time
+                const isMobile = window.innerWidth <= 768;
+
+                if (isMobile) {
+                    // Remove ALL previous images on mobile for performance
+                    const currentImages = overlay.querySelectorAll('.polaroid');
+                    currentImages.forEach(img => img.remove());
+                } else {
+                    // Desktop: keep last 25 for stack effect
+                    const currentImages = overlay.querySelectorAll('.polaroid');
+                    if (currentImages.length > 25) {
+                        overlay.removeChild(currentImages[0]);
+                    }
+                }
+
+                const polaroidDiv = document.createElement('div');
+                polaroidDiv.className = 'polaroid loading';
+
+                const img = document.createElement('img');
+
+                // Mobile optimization: lazy load with error handling
+                img.loading = 'lazy';
+                img.decoding = 'async';
+
+                // Error handling for failed image loads
+                img.onerror = function () {
+                    console.warn(`Failed to load: ${images[index]}`);
+                    polaroidDiv.remove();
+                };
+
+                // Remove loading indicator when image loads
+                img.onload = function () {
+                    polaroidDiv.classList.remove('loading');
+                };
+
+                img.src = images[index];
+                img.alt = `Memory ${index + 1}`;
+
+                // Mobile: random scattered positioning
+                if (isMobile) {
+                    // Random position across the screen
+                    const randomTop = Math.random() * 60 + 10; // 10% to 70% from top
+                    const randomLeft = Math.random() * 60 + 10; // 10% to 70% from left
+                    polaroidDiv.style.top = randomTop + '%';
+                    polaroidDiv.style.left = randomLeft + '%';
+                    polaroidDiv.style.transform = 'translate(-50%, -50%)'; // Center the image at that position
+                } else {
+                    // Desktop: random rotation
+                    const rot = Math.random() * 30 - 15;
+                    polaroidDiv.style.setProperty('--rot', rot + 'deg');
+                }
+
+                polaroidDiv.appendChild(img);
+                overlay.appendChild(polaroidDiv);
+
+                // Trigger reflow
+                void polaroidDiv.offsetWidth;
+
+                polaroidDiv.classList.add('show');
+
+                // z-index management: new one on top
+                polaroidDiv.style.zIndex = 10 + index;
+
+                index++;
+
+            }, speed);
+        }
+
+        function startChatSequence() {
+            const container = document.getElementById("chatContainer");
+            container.style.display = "flex";
+
+            chatMessages.forEach((msg, i) => {
+                const waitTime = i * 2500; // 2.5s per message
+
+                setTimeout(() => {
+                    const bubble = document.createElement("div");
+                    bubble.className = "chat-bubble";
+                    bubble.innerText = msg;
+                    container.appendChild(bubble);
+
+                    // Trigger reflow
+                    void bubble.offsetWidth;
+                    bubble.classList.add("show");
+
+                }, waitTime);
+            });
+        }
+
+        function closeFastShow() {
+            clearInterval(interval);
+            document.getElementById("fastOverlay").style.display = "none";
+            document.getElementById("fastOverlay").classList.remove("romantic-mode");
+            document.getElementById("valentinesText").classList.remove("show");
+            document.getElementById("chatContainer").style.display = "none";
+            document.getElementById("chatContainer").innerHTML = "";
+        }
+
+    </script>
+
 </body>
 
 </html>
