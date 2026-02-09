@@ -509,6 +509,167 @@
             "mem_002.jpg",
             "mem_003.jpg",
             "mem_004.jpg",
+            "mem_020.jpg",
+            "mem_021.jpg",
+            "mem_022.jpg",
+            "mem_023.jpg",
+            "mem_024.jpg",
+            "mem_025.jpg",
+            "mem_026.jpg",
+            "mem_027.jpg",
+            "mem_028.jpg",
+            "mem_029.jpg",
+            "mem_030.jpg",
+            "mem_031.jpg",
+            "mem_032.jpg",
+            "mem_033.jpg",
+            "mem_034.jpg",
+            "mem_035.jpg",
+            "mem_036.jpg",
+            "mem_037.jpg",
+            "mem_038.jpg",
+            "mem_039.jpg",
+            "mem_040.jpg",
+            "mem_041.jpg",
+            "mem_042.jpg",
+            "mem_043.jpg",
+            "mem_044.jpg",
+            "mem_045.jpg",
+            "mem_046.jpg",
+            "mem_047.jpg",
+            "mem_048.jpg",
+            "mem_049.jpg",
+            "mem_050.jpg",
+            "mem_051.jpg",
+            "mem_052.jpg",
+            "mem_053.jpg",
+            "mem_054.jpg",
+            "mem_055.jpg",
+            "mem_056.jpg",
+            "mem_057.jpg",
+            "mem_058.jpg",
+            "mem_059.jpg",
+            "mem_060.jpg",
+            "mem_061.jpg",
+            "mem_062.jpg",
+            "mem_063.jpg",
+            "mem_064.jpg",
+            "mem_065.jpg",
+            "mem_066.jpg",
+            "mem_067.jpg",
+            "mem_068.jpg",
+            "mem_069.jpg",
+            "mem_070.jpg",
+            "mem_071.jpg",
+            "mem_072.jpg",
+            "mem_073.jpg",
+            "mem_074.jpg",
+            "mem_075.jpg",
+            "mem_076.jpg",
+            "mem_077.jpg",
+            "mem_078.jpg",
+            "mem_079.jpg",
+            "mem_080.jpg",
+            "mem_081.jpg",
+            "mem_082.jpg",
+            "mem_083.jpg",
+            "mem_084.jpg",
+            "mem_085.jpg",
+            "mem_086.jpg",
+            "mem_087.jpg",
+            "mem_088.jpg",
+            "mem_089.jpg",
+            "mem_090.jpg",
+            "mem_091.jpg",
+            "mem_092.jpg",
+            "mem_093.jpg",
+            "mem_094.jpg",
+            "mem_095.jpg",
+            "mem_096.jpg",
+            "mem_097.jpg",
+            "mem_098.jpg",
+            "mem_099.jpg",
+            "mem_100.jpg",
+            "mem_101.jpg",
+            "mem_102.jpg",
+            "mem_103.jpg",
+            "mem_104.jpg",
+            "mem_105.jpg",
+            "mem_106.jpg",
+            "mem_107.jpg",
+            "mem_108.jpg",
+            "mem_109.jpg",
+            "mem_110.jpg",
+            "mem_111.jpg",
+            "mem_112.jpg",
+            "mem_113.jpg",
+            "mem_114.jpg",
+            "mem_115.jpg",
+            "mem_116.png",
+            "mem_117.jpg",
+            "mem_118.jpg",
+            "mem_119.jpg",
+            "mem_120.jpg",
+            "mem_121.jpg",
+            "mem_122.jpg",
+            "mem_128.jpg",
+            "mem_129.jpg"
+        ];
+
+        let index = 0, interval;
+        const overlay = document.getElementById("fastOverlay");
+        const finalText = document.getElementById("finalText");
+        const endText = document.getElementById("endText");
+
+        function startFastShow(e) {
+            e.stopPropagation();
+
+            // Stop the heartbeat audio!
+            heartbeat.pause();
+            heartbeat.currentTime = 0;
+
+            const loveSong = document.getElementById("loveSong");
+            overlay.style.display = "flex";
+            overlay.classList.add("romantic-mode"); // Enable romantic bg
+            index = 0;
+            finalText.classList.remove("show");
+            document.getElementById("valentinesText").classList.add("show"); // Show Happy Valentine's Day
+            endText.style.display = "none";
+
+            // Clear previous images but keep text
+            const existingImages = overlay.querySelectorAll('.polaroid');
+            existingImages.forEach(img => img.remove());
+
+            // Play music and sync
+            loveSong.currentTime = 0; // Restart song from beginning
+            loveSong.play().then(() => {
+                const duration = loveSong.duration; // in seconds
+                if (!duration) {
+                    runSlideshow(1500); // Increased default from 800ms to 1.5s for mobile
+                    return;
+                }
+
+                // Calculate interval to fit all images
+                const availableTime = (duration - 2) * 1000;
+                let intervalTime = availableTime / images.length;
+
+                // Mobile-friendly minimum: 1 second per image (increased from 40ms)
+                // This gives images time to load on slower connections
+                if (intervalTime < 1000) intervalTime = 1000;
+
+                console.log(`Song duration: ${duration}s, Images: ${images.length}, Interval: ${intervalTime}ms`);
+
+                runSlideshow(intervalTime);
+
+            }).catch(err => {
+                console.error("Audio play failed", err);
+                runSlideshow(1500); // Increased fallback from 500ms to 1.5s
+            });
+        }
+        "mem_001.jpg",
+            "mem_002.jpg",
+            "mem_003.jpg",
+            "mem_004.jpg",
             "mem_005.heic",
             "mem_006.heic",
             "mem_007.heic",
