@@ -653,9 +653,8 @@
                 const availableTime = (duration - 2) * 1000;
                 let intervalTime = availableTime / images.length;
 
-                // Mobile-friendly minimum: 1 second per image (increased from 40ms)
-                // This gives images time to load on slower connections
-                if (intervalTime < 1000) intervalTime = 1000;
+                // Minimum: 5 seconds per image for comfortable viewing
+                if (intervalTime < 5000) intervalTime = 5000;
 
                 console.log(`Song duration: ${duration}s, Images: ${images.length}, Interval: ${intervalTime}ms`);
 
@@ -663,7 +662,7 @@
 
             }).catch(err => {
                 console.error("Audio play failed", err);
-                runSlideshow(1500); // Increased fallback from 500ms to 1.5s
+                runSlideshow(5000); // 5 seconds fallback
             });
         }
         "mem_001.jpg",
